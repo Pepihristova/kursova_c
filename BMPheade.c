@@ -16,30 +16,34 @@ typedef struct{
     char    reserved_2[16];                 // reserved
 }bmpHeader;
 
-int main(){
+int main(int argc, char *argv[]){
 
     bmpHeader mHeader;
     int width = 1000;
     int height = 1000;
 
+    if(argc > 2)
+    {
+        width = atoi(argv[1]);
+        height = atoi(argv[2]);
+    }
+
     FILE *fbmp = NULL;
 
     fbmp = fopen("image.bmp", "w");
-
-    printf("size of header %d", sizeof(mHeader));
 
     mHeader.BMP = 0x4d42;
     *(int *)(mHeader.sizeOfFile) = 1000*1000 + 54;
     *(int *)(mHeader.reserved) = 0;
     *(int *)(mHeader.offsettoStartofImageData) = 0;
     *(int *)(mHeader.sizeofBMPInfoHeader) = 40;
-    *(int *)(mHeader.width) = 1000;
-    *(int *)(mHeader.height) = 1000;
+    *(int *)(mHeader.width) = width;
+    *(int *)(mHeader.height) = height;
     mHeader.planesCnt = 1;
     mHeader.bitsperPixel = 24;
     *(int *)(mHeader.compressionType) = 0;
     *(int *)(mHeader.sizeofImage) = 1000*1000;
-    *(long double *)(mHeader.reserved_2) = 0x0000000000000000;
+    *(long double *)(mHeader.reserved_2) = 0x0000000000000000; //16*8 0 bits
 
     fwrite(&mHeader,54,1,fbmp);
 
@@ -57,6 +61,4 @@ int main(){
     fclose(fbmp);
 
     return 0;
-
-
 }
