@@ -7,6 +7,16 @@ typedef struct
     char pixel;
 }pixel8b;
 
+typedef union
+{
+    short size;
+    struct{
+        unsigned short blue : 5;
+        unsigned short green : 6;
+        unsigned short red : 5;
+    }color;
+}pixel16p;
+
 typedef struct
 {
     char blue_color;
@@ -30,6 +40,8 @@ typedef struct
 }bmpHeader;
 
 void input_dimentions(bmpHeader* pHeader, int width, int height);
+
+void get_current_dimentions(bmpHeader* pHeader, int* width, int* height);
 
 char* bmp_header_offset(bmpHeader mHeader,int* p_offset);
 

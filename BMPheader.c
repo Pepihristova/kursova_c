@@ -8,6 +8,12 @@ int get_sizeofImageData(bmpHeader mHeader)
     return *(int*)(mHeader.sizeofImage);
 }
 
+void get_current_dimentions(bmpHeader* pHeader, int* width, int* height)
+{
+    *width = *(int*)(pHeader->width);
+    *height = *(int*)(pHeader->height);
+}
+
 void input_dimentions(bmpHeader* pHeader, int width, int height){
     *(int *)(pHeader->width) = width;
     *(int *)(pHeader->height) = height;

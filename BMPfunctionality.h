@@ -6,11 +6,12 @@
 #include "BMPheader.h"
 
 void** BMP_Image_data_handler(char* buffer, bmpHeader mHeader);
+int horizontal_flip(void** input,bmpHeader* pHeader);
+void** rotate(void** input,bmpHeader* pHeader);
+int Inverce(void** input,bmpHeader* pHeader);
 /*
-void BMP_rotate(FILE ** Finput, FILE** Foutput);
 
 void BMP_inverce();
 
-void BMP_flip();
 */
 #endif

@@ -60,30 +60,41 @@ int main(int argc, char *argv[]){
     }
 
     ImageData = BMP_Image_data_handler(ImageFile, *pHeader);
+//// main functions ////
+
+    horizontal_flip(ImageData,pHeader);
+
+    ImageData = rotate(ImageData,pHeader);
+
+    Inverce(ImageData,pHeader);
+
+//// main functions end ////
+    get_current_dimentions(pHeader,&width,&height);
 
     fwrite(pHeader,sizeof(bmpHeader),1,mFile);
 
     fwrite(ImageDataOffset,sizeof(char),offset,mFile);
 
-    if(pHeader->bitsperPixel == 24)
+    int size = size_of_image/(height * width);
+
+    char** Image = (char**)ImageData;
+
+    for(int i = 0; i < height ; i ++)
     {
-        pixel24b** pBuffer = (pixel24b**)ImageData;
-        char data;
-        for(int i = 0;i < 1280; i ++)
+        for(int p = 0; p < width*size; p++)
         {
-            for(int p = 0; p < 1920; p++)
-            {
-                fwrite(&pBuffer[i][p],sizeof(pixel24b),1,mFile);
-            }
+            fwrite(&Image[i][p],sizeof(char),1,mFile);
         }
-    }
+    }    
 
 ////////////////////////////////////////////
+/// free
+///////////////////////////////////////////
+
     free(pHeader);
     free(ImageDataOffset);
-    for(int p = 0; p < width ; p++)
+    for(int p = 0; p < height ; p++)
     {
-        printf("%d\n", *((((pixel24b**)ImageData)+p)+p));
         free(ImageData[p]);
     }
     free(ImageData);
