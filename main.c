@@ -52,6 +52,8 @@ int main(int argc, char *argv[]){
         printf("error 2 reading from file\n");
     }
 
+    get_current_dimentions(pHeader,&width,&height);
+
     ImageFile = (char*) malloc(sizeof(char)* size_of_image);
 
     if(ImageFile != NULL)
@@ -79,13 +81,63 @@ int main(int argc, char *argv[]){
 
     char** Image = (char**)ImageData;
 
-    for(int i = 0; i < height ; i ++)
+    char byte_value = 0x00;
+
+    if(pHeader->bitsperPixel == 1)
     {
-        for(int p = 0; p < width*size; p++)
+        for(int i = 0; i < height ; i ++)
         {
-            fwrite(&Image[i][p],sizeof(char),1,mFile);
+            for(int p = 0; p < width; )
+            {
+                for(int bit = 0; bit < 8; bit++, p++)
+                {
+                    byte_value = byte_value | ((Image[i][p] & 0x01) << 7 - bit); // 1000 0000
+                }
+                fwrite(&byte_value,sizeof(char),1,mFile);
+                byte_value = 0x00;
+            }
         }
-    }    
+    }
+    else if(pHeader->bitsperPixel == 2)
+    {
+        for(int i = 0; i < height ; i ++)
+        {
+            for(int p = 0; p < width; )
+            {
+                for(int bit = 0; bit < 8; bit+=2, p++)
+                {
+                    byte_value = byte_value | ((Image[i][p] & 0x03) << 6 - bit); // 1000 0000
+                }
+                fwrite(&byte_value,sizeof(char),1,mFile);
+                byte_value = 0x00;
+            }
+        }
+    }
+    else if(pHeader->bitsperPixel == 4)
+    {
+        for(int i = 0; i < height ; i ++)
+        {
+            for(int p = 0; p < width; )
+            {
+                for(int bit = 0; bit < 8; bit+=4, p++)
+                {
+                    byte_value = byte_value | ((Image[i][p] & 0x0f) << (4 - bit)); // 1000 0000
+                }
+                fwrite(&byte_value,sizeof(char),1,mFile);
+                byte_value = 0x00;
+            }
+        }
+    }
+    else
+    {
+        for(int i = 0; i < height ; i ++)
+        {
+            for(int p = 0; p < width*size; p++)
+            {
+                fwrite(&Image[i][p],sizeof(char),1,mFile);
+            }
+        }   
+    }
 
 ////////////////////////////////////////////
 /// free

@@ -4,18 +4,36 @@
 
 typedef struct
 {
-    char pixel;
+    unsigned char value : 1;
+    unsigned char reserved : 7;
+}pixel1b;
+
+typedef struct
+{
+    unsigned char value : 2;
+    unsigned char reserved : 6;
+}pixel2b;
+
+typedef struct
+{
+    unsigned char value : 4;
+    unsigned char reserved : 4;
+}pixel4b;
+
+typedef struct
+{
+    char value;
 }pixel8b;
 
 typedef union
 {
-    short size;
+    short value;
     struct{
-        unsigned short blue : 5;
-        unsigned short green : 6;
-        unsigned short red : 5;
+        unsigned short blue_color : 5;
+        unsigned short green_color : 6;
+        unsigned short red_color : 5;
     }color;
-}pixel16p;
+}pixel16b;
 
 typedef struct
 {
